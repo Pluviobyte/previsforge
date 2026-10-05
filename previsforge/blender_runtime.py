@@ -34,6 +34,24 @@ def reset_scene() -> None:
             bpy.data.collections.remove(collection)
 
 
+def create_collection(name: str) -> bpy.types.Collection:
+    collection = bpy.data.collections.new(name)
+    bpy.context.scene.collection.children.link(collection)
+    return collection
+
+
+def move_to_collection(obj: bpy.types.Object, collection: bpy.types.Collection) -> None:
+    if obj.name not in collection.objects:
+        collection.objects.link(obj)
+    for current in tuple(obj.users_collection):
+        if current != collection:
+            current.objects.unlink(obj)
+
+
+def frame_for_time(time_seconds: float, fps: int, end_frame: int) -> int:
+    return min(end_frame, max(1, round(time_seconds * fps) + 1))
+
+
 def material_for(entity: dict) -> bpy.types.Material:
     material = bpy.data.materials.new(f"MAT_{entity['id']}")
     color = entity.get("color", [0.72, 0.74, 0.78, 1])
@@ -54,18 +72,22 @@ def apply_base_transform(obj: bpy.types.Object, entity: dict) -> None:
     obj.scale = entity.get("scale", [1, 1, 1])
 
 
-def apply_animation(obj: bpy.types.Object, entity: dict, fps: int) -> None:
+def apply_transform_keyframe(obj: bpy.types.Object, keyframe: dict, frame: int) -> None:
+    if "location" in keyframe:
+        obj.location = keyframe["location"]
+        obj.keyframe_insert("location", frame=frame)
+    if "rotation" in keyframe:
+        obj.rotation_euler = radians(keyframe["rotation"])
+        obj.keyframe_insert("rotation_euler", frame=frame)
+    if "scale" in keyframe:
+        obj.scale = keyframe["scale"]
+        obj.keyframe_insert("scale", frame=frame)
+
+
+def apply_animation(obj: bpy.types.Object, entity: dict, fps: int, end_frame: int) -> None:
     for keyframe in entity.get("keyframes", []):
-        frame = round(float(keyframe["time"]) * fps) + 1
-        if "location" in keyframe:
-            obj.location = keyframe["location"]
-            obj.keyframe_insert("location", frame=frame)
-        if "rotation" in keyframe:
-            obj.rotation_euler = radians(keyframe["rotation"])
-            obj.keyframe_insert("rotation_euler", frame=frame)
-        if "scale" in keyframe:
-            obj.scale = keyframe["scale"]
-            obj.keyframe_insert("scale", frame=frame)
+        frame = frame_for_time(float(keyframe["time"]), fps, end_frame)
+        apply_transform_keyframe(obj, keyframe, frame)
 
 
 def add_primitive(entity: dict, material: bpy.types.Material) -> bpy.types.Object:
@@ -130,17 +152,31 @@ def add_actor(entity: dict, material: bpy.types.Material) -> bpy.types.Object:
     return root
 
 
-def add_entity(entity: dict, fps: int) -> bpy.types.Object:
+def add_entity(
+    entity: dict,
+    fps: int,
+    end_frame: int,
+    collection: bpy.types.Collection,
+) -> bpy.types.Object:
     material = material_for(entity)
     obj = add_actor(entity, material) if entity["kind"] == "actor" else add_primitive(entity, material)
     apply_base_transform(obj, entity)
-    apply_animation(obj, entity, fps)
+    apply_animation(obj, entity, fps, end_frame)
+    move_to_collection(obj, collection)
+    for child in obj.children_recursive:
+        move_to_collection(child, collection)
     obj["previsforge_kind"] = entity["kind"]
     obj["previsforge_name"] = entity.get("name", entity["id"])
     return obj
 
 
-def add_camera(spec: dict, objects: dict[str, bpy.types.Object], fps: int) -> bpy.types.Object:
+def add_camera(
+    spec: dict,
+    objects: dict[str, bpy.types.Object],
+    fps: int,
+    end_frame: int,
+    collection: bpy.types.Collection,
+) -> bpy.types.Object:
     data = bpy.data.cameras.new(spec.get("id", "camera"))
     camera = bpy.data.objects.new(spec.get("id", "camera"), data)
     bpy.context.scene.collection.objects.link(camera)
@@ -149,13 +185,8 @@ def add_camera(spec: dict, objects: dict[str, bpy.types.Object], fps: int) -> bp
     camera.rotation_euler = radians(spec.get("rotation", [65, 0, 45]))
     data.lens = float(spec.get("focal_length", 35))
     for keyframe in spec.get("keyframes", []):
-        frame = round(float(keyframe["time"]) * fps) + 1
-        if "location" in keyframe:
-            camera.location = keyframe["location"]
-            camera.keyframe_insert("location", frame=frame)
-        if "rotation" in keyframe:
-            camera.rotation_euler = radians(keyframe["rotation"])
-            camera.keyframe_insert("rotation_euler", frame=frame)
+        frame = frame_for_time(float(keyframe["time"]), fps, end_frame)
+        apply_transform_keyframe(camera, keyframe, frame)
         if "focal_length" in keyframe:
             data.lens = float(keyframe["focal_length"])
             data.keyframe_insert("lens", frame=frame)
@@ -164,10 +195,11 @@ def add_camera(spec: dict, objects: dict[str, bpy.types.Object], fps: int) -> bp
         constraint = camera.constraints.new(type="DAMPED_TRACK")
         constraint.target = objects[target]
         constraint.track_axis = "TRACK_NEGATIVE_Z"
+    move_to_collection(camera, collection)
     return camera
 
 
-def add_lighting() -> None:
+def add_lighting(collection: bpy.types.Collection) -> None:
     world = bpy.context.scene.world or bpy.data.worlds.new("World")
     bpy.context.scene.world = world
     world.use_nodes = True
@@ -177,6 +209,7 @@ def add_lighting() -> None:
     sun_data.energy = 2.2
     sun = bpy.data.objects.new("KeySun", sun_data)
     bpy.context.scene.collection.objects.link(sun)
+    move_to_collection(sun, collection)
     sun.rotation_euler = radians([25, -20, -35])
 
     area_data = bpy.data.lights.new("Softbox", type="AREA")
@@ -185,6 +218,7 @@ def add_lighting() -> None:
     area_data.size = 8
     area = bpy.data.objects.new("Softbox", area_data)
     bpy.context.scene.collection.objects.link(area)
+    move_to_collection(area, collection)
     area.location = (0, -5, 8)
     area.rotation_euler = radians([25, 0, 0])
 
@@ -193,7 +227,7 @@ def configure_scene(spec: dict, output_dir: Path) -> None:
     scene = bpy.context.scene
     fps = int(spec["fps"])
     scene.frame_start = 1
-    scene.frame_end = round(float(spec["duration_seconds"]) * fps) + 1
+    scene.frame_end = round(float(spec["duration_seconds"]) * fps)
     scene.render.fps = fps
     scene.render.resolution_x = int(spec["resolution"][0])
     scene.render.resolution_y = int(spec["resolution"][1])
@@ -211,7 +245,7 @@ def configure_scene(spec: dict, output_dir: Path) -> None:
         scene.world.node_tree.nodes["Background"].inputs["Color"].default_value = world_color
 
     for marker in spec.get("markers", []):
-        frame = round(float(marker["time"]) * fps) + 1
+        frame = frame_for_time(float(marker["time"]), fps, scene.frame_end)
         scene.timeline_markers.new(marker["label"], frame=frame)
 
 
@@ -236,9 +270,23 @@ def main() -> None:
     args.output_dir.mkdir(parents=True, exist_ok=True)
     spec = json.loads(args.scene.read_text(encoding="utf-8"))
     reset_scene()
-    add_lighting()
-    objects = {entity["id"]: add_entity(entity, int(spec["fps"])) for entity in spec["entities"]}
-    camera = add_camera(spec["camera"], objects, int(spec["fps"]))
+    whitebox_collection = create_collection("PF_Whitebox")
+    actor_collection = create_collection("PF_Actors")
+    camera_collection = create_collection("PF_Cameras")
+    light_collection = create_collection("PF_Lights")
+    add_lighting(light_collection)
+    fps = int(spec["fps"])
+    end_frame = round(float(spec["duration_seconds"]) * fps)
+    objects = {
+        entity["id"]: add_entity(
+            entity,
+            fps,
+            end_frame,
+            actor_collection if entity["kind"] == "actor" else whitebox_collection,
+        )
+        for entity in spec["entities"]
+    }
+    camera = add_camera(spec["camera"], objects, fps, end_frame, camera_collection)
     bpy.context.scene.camera = camera
     configure_scene(spec, args.output_dir)
     bpy.ops.wm.save_as_mainfile(filepath=str(args.output_dir / "scene.blend"))

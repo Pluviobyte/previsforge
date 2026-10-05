@@ -43,8 +43,8 @@ Supported kinds: `box`, `sphere`, `cylinder`, `torus`, `plane`, `actor`, and `em
 
 Recognized metadata:
 
-- `collision: true`: include a static entity in approximate overlap checks.
-- `camera_blocker: true`: warn when a camera path segment crosses its approximate bounds.
+- `collision: false`: opt a static entity out of approximate overlap checks (static geometry participates by default).
+- `camera_blocker: false`: opt a static entity out of camera-path obstruction checks (it follows `collision` by default).
 - `wireframe: true`: compile a box as a visible structural cage.
 
 ## Camera

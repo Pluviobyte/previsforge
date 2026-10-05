@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 from typing import Iterable
 
 from .model import EntitySpec, Keyframe, SceneSpec
@@ -88,7 +89,7 @@ def _entity_findings(entity: EntitySpec, index: int, duration: float) -> list[Fi
         findings.append(
             Finding("error", "unsupported_kind", f"{path}.kind", f"Unsupported kind: {entity.kind}")
         )
-    if any(value <= 0 for value in entity.dimensions):
+    if any(not math.isfinite(value) or value <= 0 for value in entity.dimensions):
         findings.append(
             Finding(
                 "error",
@@ -148,7 +149,7 @@ def _spatial_findings(scene: SceneSpec) -> list[Finding]:
     colliders = [
         entity
         for entity in scene.entities
-        if entity.metadata.get("collision") is True and not entity.keyframes
+        if entity.metadata.get("collision", True) is not False and not entity.keyframes
     ]
     for left_index, left in enumerate(colliders):
         for right in colliders[left_index + 1 :]:
@@ -169,7 +170,8 @@ def _spatial_findings(scene: SceneSpec) -> list[Finding]:
     blockers = [
         entity
         for entity in scene.entities
-        if entity.metadata.get("camera_blocker") is True and not entity.keyframes
+        if entity.metadata.get("camera_blocker", entity.metadata.get("collision", True)) is not False
+        and not entity.keyframes
     ]
     warned: set[str] = set()
     for start, end in zip(camera_points, camera_points[1:]):

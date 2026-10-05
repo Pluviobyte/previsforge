@@ -84,6 +84,15 @@ class ValidationContractTests(unittest.TestCase):
         self.assertIn("static_overlap", warning_codes)
         self.assertIn("camera_path_obstructed", warning_codes)
 
+    def test_rejects_non_finite_dimensions(self) -> None:
+        source = base_scene()
+        source["entities"][0]["dimensions"] = [float("nan"), 1, 1]
+
+        report = validate_scene(SceneSpec.from_dict(source))
+
+        self.assertFalse(report.valid)
+        self.assertIn("invalid_dimensions", {finding.code for finding in report.errors})
+
 
 if __name__ == "__main__":
     unittest.main()
