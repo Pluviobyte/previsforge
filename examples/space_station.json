@@ -1,0 +1,600 @@
+{
+  "version": "1.0",
+  "title": "Orbital Escape",
+  "duration_seconds": 12.0,
+  "fps": 15,
+  "resolution": [
+    640,
+    360
+  ],
+  "world_color": [
+    0.012,
+    0.018,
+    0.032,
+    1.0
+  ],
+  "entities": [
+    {
+      "id": "maintenance_bay",
+      "name": "Maintenance bay",
+      "kind": "box",
+      "dimensions": [
+        7.0,
+        5.0,
+        3.5
+      ],
+      "color": [
+        0.55,
+        0.58,
+        0.62,
+        0.22
+      ],
+      "location": [
+        -6.5,
+        0.0,
+        1.75
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "keyframes": [],
+      "metadata": {
+        "wireframe": true,
+        "collision": false
+      }
+    },
+    {
+      "id": "cargo_tunnel",
+      "name": "Cargo tunnel",
+      "kind": "box",
+      "dimensions": [
+        7.0,
+        3.5,
+        3.2
+      ],
+      "color": [
+        0.65,
+        0.68,
+        0.72,
+        0.18
+      ],
+      "location": [
+        0.5,
+        0.0,
+        1.6
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "keyframes": [],
+      "metadata": {
+        "wireframe": true,
+        "collision": false
+      }
+    },
+    {
+      "id": "habitat_ring",
+      "name": "Rotating habitat",
+      "kind": "torus",
+      "dimensions": [
+        8.0,
+        8.0,
+        1.2
+      ],
+      "color": [
+        0.72,
+        0.74,
+        0.78,
+        1.0
+      ],
+      "location": [
+        6.0,
+        0.0,
+        2.2
+      ],
+      "rotation": [
+        90.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "keyframes": [
+        {
+          "time": 0.0,
+          "rotation": [
+            90.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "time": 12.0,
+          "rotation": [
+            90.0,
+            0.0,
+            120.0
+          ]
+        }
+      ],
+      "metadata": {
+        "collision": false
+      }
+    },
+    {
+      "id": "airlock",
+      "name": "Airlock",
+      "kind": "torus",
+      "dimensions": [
+        3.5,
+        3.5,
+        0.8
+      ],
+      "color": [
+        0.5,
+        0.54,
+        0.6,
+        1.0
+      ],
+      "location": [
+        11.0,
+        0.0,
+        2.0
+      ],
+      "rotation": [
+        90.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "keyframes": [],
+      "metadata": {
+        "collision": false
+      }
+    },
+    {
+      "id": "escape_capsule",
+      "name": "Escape capsule",
+      "kind": "box",
+      "dimensions": [
+        3.5,
+        3.5,
+        3.5
+      ],
+      "color": [
+        0.78,
+        0.8,
+        0.82,
+        1.0
+      ],
+      "location": [
+        14.0,
+        0.0,
+        2.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "keyframes": [],
+      "metadata": {
+        "wireframe": true,
+        "collision": false
+      }
+    },
+    {
+      "id": "cargo_a",
+      "name": "Floating cargo A",
+      "kind": "box",
+      "dimensions": [
+        1.1,
+        1.1,
+        1.1
+      ],
+      "color": [
+        0.9,
+        0.48,
+        0.12,
+        1.0
+      ],
+      "location": [
+        -1.0,
+        -0.8,
+        1.5
+      ],
+      "rotation": [
+        10.0,
+        0.0,
+        15.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "keyframes": [
+        {
+          "time": 0.0,
+          "location": [
+            -1.0,
+            -0.8,
+            1.5
+          ],
+          "rotation": [
+            10.0,
+            0.0,
+            15.0
+          ]
+        },
+        {
+          "time": 6.0,
+          "location": [
+            0.0,
+            0.8,
+            2.3
+          ],
+          "rotation": [
+            80.0,
+            35.0,
+            120.0
+          ]
+        },
+        {
+          "time": 12.0,
+          "location": [
+            1.0,
+            -0.2,
+            1.2
+          ],
+          "rotation": [
+            160.0,
+            80.0,
+            250.0
+          ]
+        }
+      ],
+      "metadata": {
+        "collision": true
+      }
+    },
+    {
+      "id": "cargo_b",
+      "name": "Floating cargo B",
+      "kind": "box",
+      "dimensions": [
+        0.7,
+        0.9,
+        0.7
+      ],
+      "color": [
+        0.18,
+        0.5,
+        0.78,
+        1.0
+      ],
+      "location": [
+        1.5,
+        0.9,
+        2.1
+      ],
+      "rotation": [
+        0.0,
+        20.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "keyframes": [
+        {
+          "time": 0.0,
+          "location": [
+            1.5,
+            0.9,
+            2.1
+          ]
+        },
+        {
+          "time": 12.0,
+          "location": [
+            0.2,
+            -0.8,
+            1.5
+          ],
+          "rotation": [
+            120.0,
+            40.0,
+            180.0
+          ]
+        }
+      ],
+      "metadata": {
+        "collision": true
+      }
+    },
+    {
+      "id": "astronaut",
+      "name": "Astronaut",
+      "kind": "actor",
+      "dimensions": [
+        0.7,
+        0.7,
+        1.8
+      ],
+      "color": [
+        0.82,
+        0.82,
+        0.76,
+        1.0
+      ],
+      "location": [
+        -9.0,
+        0.0,
+        1.2
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "keyframes": [
+        {
+          "time": 0.0,
+          "location": [
+            -9.0,
+            0.0,
+            1.2
+          ]
+        },
+        {
+          "time": 3.0,
+          "location": [
+            -3.0,
+            0.7,
+            1.5
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            -10.0
+          ]
+        },
+        {
+          "time": 6.0,
+          "location": [
+            4.5,
+            0.0,
+            2.2
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "time": 9.0,
+          "location": [
+            10.5,
+            0.0,
+            2.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            15.0
+          ]
+        },
+        {
+          "time": 12.0,
+          "location": [
+            14.0,
+            0.0,
+            2.0
+          ]
+        }
+      ],
+      "metadata": {
+        "collision": true
+      }
+    },
+    {
+      "id": "guide_drone",
+      "name": "Guide drone",
+      "kind": "sphere",
+      "dimensions": [
+        0.45,
+        0.45,
+        0.45
+      ],
+      "color": [
+        0.05,
+        0.9,
+        1.0,
+        1.0
+      ],
+      "location": [
+        -7.8,
+        0.0,
+        2.2
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "keyframes": [
+        {
+          "time": 0.0,
+          "location": [
+            -7.8,
+            0.0,
+            2.2
+          ]
+        },
+        {
+          "time": 3.0,
+          "location": [
+            -1.8,
+            0.2,
+            2.5
+          ]
+        },
+        {
+          "time": 6.0,
+          "location": [
+            5.8,
+            0.0,
+            3.0
+          ]
+        },
+        {
+          "time": 9.0,
+          "location": [
+            11.8,
+            0.0,
+            2.7
+          ]
+        },
+        {
+          "time": 12.0,
+          "location": [
+            15.0,
+            0.0,
+            2.8
+          ]
+        }
+      ],
+      "metadata": {
+        "collision": false
+      }
+    }
+  ],
+  "camera": {
+    "id": "camera",
+    "location": [
+      -12.0,
+      -6.0,
+      3.8
+    ],
+    "rotation": [
+      70.0,
+      0.0,
+      -65.0
+    ],
+    "focal_length": 28.0,
+    "target": "astronaut",
+    "keyframes": [
+      {
+        "time": 0.0,
+        "location": [
+          -12.0,
+          -6.0,
+          3.8
+        ],
+        "focal_length": 28.0
+      },
+      {
+        "time": 3.0,
+        "location": [
+          -5.5,
+          -4.0,
+          2.8
+        ],
+        "focal_length": 24.0
+      },
+      {
+        "time": 6.0,
+        "location": [
+          1.5,
+          -4.0,
+          3.2
+        ],
+        "focal_length": 24.0
+      },
+      {
+        "time": 9.0,
+        "location": [
+          7.5,
+          -4.5,
+          3.0
+        ],
+        "focal_length": 28.0
+      },
+      {
+        "time": 12.0,
+        "location": [
+          11.0,
+          -5.0,
+          3.2
+        ],
+        "focal_length": 32.0
+      }
+    ]
+  },
+  "markers": [
+    {
+      "time": 0.0,
+      "label": "Enter maintenance bay"
+    },
+    {
+      "time": 3.0,
+      "label": "Avoid cargo"
+    },
+    {
+      "time": 6.0,
+      "label": "Cross habitat ring"
+    },
+    {
+      "time": 9.0,
+      "label": "Enter airlock"
+    },
+    {
+      "time": 12.0,
+      "label": "Reach escape capsule"
+    }
+  ],
+  "metadata": {
+    "template": "space-station",
+    "units": "meters"
+  }
+}

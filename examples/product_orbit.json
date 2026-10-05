@@ -1,0 +1,164 @@
+{
+  "version": "1.0",
+  "title": "Product Orbit",
+  "duration_seconds": 6.0,
+  "fps": 24,
+  "resolution": [
+    640,
+    360
+  ],
+  "world_color": [
+    0.025,
+    0.025,
+    0.03,
+    1.0
+  ],
+  "entities": [
+    {
+      "id": "floor",
+      "name": "Floor",
+      "kind": "cylinder",
+      "dimensions": [
+        6.0,
+        6.0,
+        0.3
+      ],
+      "color": [
+        0.18,
+        0.18,
+        0.2,
+        1.0
+      ],
+      "location": [
+        0.0,
+        0.0,
+        -0.15
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "keyframes": [],
+      "metadata": {
+        "collision": false
+      }
+    },
+    {
+      "id": "product",
+      "name": "Product",
+      "kind": "box",
+      "dimensions": [
+        1.2,
+        1.2,
+        2.2
+      ],
+      "color": [
+        0.85,
+        0.86,
+        0.9,
+        1.0
+      ],
+      "location": [
+        0.0,
+        0.0,
+        1.1
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "keyframes": [
+        {
+          "time": 0.0,
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "time": 6.0,
+          "rotation": [
+            0.0,
+            0.0,
+            360.0
+          ]
+        }
+      ],
+      "metadata": {
+        "collision": true
+      }
+    }
+  ],
+  "camera": {
+    "id": "camera",
+    "location": [
+      5.0,
+      -5.0,
+      3.0
+    ],
+    "rotation": [
+      65.0,
+      0.0,
+      45.0
+    ],
+    "focal_length": 50.0,
+    "target": "product",
+    "keyframes": [
+      {
+        "time": 0.0,
+        "location": [
+          5.0,
+          -5.0,
+          3.0
+        ]
+      },
+      {
+        "time": 3.0,
+        "location": [
+          -5.0,
+          -5.0,
+          2.5
+        ]
+      },
+      {
+        "time": 6.0,
+        "location": [
+          -5.0,
+          5.0,
+          3.0
+        ]
+      }
+    ]
+  },
+  "markers": [
+    {
+      "time": 0.0,
+      "label": "Reveal"
+    },
+    {
+      "time": 3.0,
+      "label": "Hero angle"
+    },
+    {
+      "time": 6.0,
+      "label": "End frame"
+    }
+  ],
+  "metadata": {
+    "template": "product-orbit",
+    "units": "meters"
+  }
+}

@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "previsforge"
+version = "0.1.0"
+description = "Local-first 3D whitebox previsualization for controllable AI video"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "PrevisForge contributors" }]
+keywords = ["blender", "previsualization", "ai-video", "3d", "whitebox"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Multimedia :: Video",
+]
+
+[project.scripts]
+previsforge = "previsforge.cli:main"
+
+[project.urls]
+Documentation = "https://github.com/Pluviobyte/previsforge#readme"
+Issues = "https://github.com/Pluviobyte/previsforge/issues"
+
+[tool.setuptools.packages.find]
+include = ["previsforge*"]
